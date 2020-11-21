@@ -1,5 +1,6 @@
 <template>
   <div class="a">
+    <ImageLoader/>
     <SaliencyMap/>
 
     <h1>Visualizing Age Detectors with Saliency Maps</h1>
@@ -59,14 +60,36 @@
 </template>
 
 <script>
+import * as tf from '@tensorflow/tfjs';
+
 import SaliencyMap from '../components/SaliencyMap.vue';
+import ImageLoader from '../components/ImageLoader.vue';
 
 export default {
   name: 'Article',
+  data: function data() {
+    return {
+      model: '',
+    };
+  },
   props: {
   },
   components: {
     SaliencyMap,
+    ImageLoader,
+  },
+  methods: {
+    async loadModel() {
+      const modelUrl = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json';
+      // const modelFile = require('@/assets/model/model.json');
+      this.model = await tf.loadGraphModel(modelUrl);
+
+      console.log(this.model);
+      // console.log(this.model.layers);
+    },
+  },
+  async mounted() {
+    this.loadModel();
   },
 };
 </script>

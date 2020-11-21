@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import * as tf from '@tensorflow/tfjs';
+// import * as tf from '@tensorflow/tfjs';
 // import {loadGraphModel} from '@tensorflow/tfjs-converter';
 // Using this as reference for base saliency map
 // https://github.com/alexanderkroner/saliency
@@ -18,18 +18,6 @@ export default {
     return {
       temp: '',
     };
-  },
-  methods: {
-    async loadModel() {
-      this.temp = 'Hello';
-      const modelUrl = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json';
-      const model = await tf.loadGraphModel(modelUrl);
-
-      console.log(model);
-    },
-  },
-  async mounted() {
-    this.loadModel();
   },
 };
 </script>
