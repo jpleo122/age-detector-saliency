@@ -80,12 +80,8 @@ export default {
   },
   methods: {
     async loadModel() {
-      const modelUrl = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json';
-      // const modelFile = require('@/assets/model/model.json');
-      this.model = await tf.loadGraphModel(modelUrl);
-
-      console.log(this.model);
-      // console.log(this.model.layers);
+      const modelFile = '../../model/model.json';
+      this.model = await tf.loadLayersModel(modelFile);
     },
   },
   async mounted() {
