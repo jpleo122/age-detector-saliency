@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tensorflow/tfjs": "^2.7.0",
+    "@vue/cli": "^4.5.9",
     "core-js": "^3.6.5",
     "d3": "^6.2.0",
     "vue": "^2.6.11",
