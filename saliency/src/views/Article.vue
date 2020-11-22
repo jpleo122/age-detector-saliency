@@ -1,8 +1,10 @@
 <template>
   <div class="a">
-    <ImageLoader/>
+    <ImageLoader
+      @image-loaded="predictModel($event)"
+    />
     <SaliencyMap/>
-    <div v-on:image-loaded="predictModel">prediction:</div>
+    <!-- <div>prediction:{{this.num}}</div> -->
 
     <!-- <img :src='this.temp_img_url' id='temp_image'> -->
 
@@ -30,7 +32,7 @@ export default {
   name: 'Article',
   data: function data() {
     return {
-      num: 1,
+      pic: null,
       model: null,
       face_detector: null,
       temp_img: null,
@@ -61,14 +63,14 @@ export default {
       return image;
     },
 
-    async predictModel(pic) {
-      this.num += pic;
-      console.log(this.num);
+    async predictModel(event) {
+      this.pic = event;
+      console.log(this.pic);
+      console.log(event);
     },
   },
   async mounted() {
     this.loadModels();
-    this.predictModel();
   },
 };
 </script>

@@ -50,6 +50,11 @@ img {
   display: block;
   margin-bottom: 10px;
 }
-button {
+.row {
+  display: flex;
+}
+
+.column {
+  padding: 5px;
 }
 </style>
