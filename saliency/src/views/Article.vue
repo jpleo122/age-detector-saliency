@@ -4,6 +4,8 @@
     <SaliencyMap/>
     <div v-on:image-loaded="predictModel">prediction:</div>
 
+    <!-- <img :src='this.temp_img_url' id='temp_image'> -->
+
     <h1>Visualizing Age Detectors with Saliency Maps</h1>
 
     <h2>What is a saliency map?</h2>
@@ -18,6 +20,8 @@
 
 <script>
 import * as tf from '@tensorflow/tfjs';
+import * as cv from 'opencv.js';
+// import * as cv from 'opencv'
 
 import SaliencyMap from '../components/SaliencyMap.vue';
 import ImageLoader from '../components/ImageLoader.vue';
@@ -26,20 +30,35 @@ export default {
   name: 'Article',
   data: function data() {
     return {
-      model: '',
       num: 1,
+      model: null,
+      face_detector: null,
+      temp_img: null,
+      temp_img_url: null,
     };
-  },
-  props: {
   },
   components: {
     SaliencyMap,
     ImageLoader,
   },
   methods: {
-    async loadModel() {
-      const modelFile = '../../model/model.json';
+    async loadModels() {
+      const modelFile = '../../models/model.json';
       this.model = await tf.loadLayersModel(modelFile);
+
+      const faceDetectFile = '../../haarcascade_frontalface_default.xml';
+      this.face_detector = new cv.CascadeClassifier();
+      this.face_detector.load(faceDetectFile);
+
+      this.temp_img_url = '../../jonathan-leo.jpg';
+      this.temp_img = cv.imread('temp_image');
+
+      console.log(this.temp_img);
+    },
+    loadImage(url) {
+      const image = new Image();
+      image.src = url;
+      return image;
     },
 
     async predictModel(pic) {
@@ -48,7 +67,7 @@ export default {
     },
   },
   async mounted() {
-    this.loadModel();
+    this.loadModels();
     this.predictModel();
   },
 };
