@@ -50,11 +50,4 @@ img {
   display: block;
   margin-bottom: 10px;
 }
-.row {
-  display: flex;
-}
-
-.column {
-  padding: 5px;
-}
 </style>
