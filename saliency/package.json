@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "d3": "^6.2.0",
     "opencv.js": "^1.2.1",
+    "utils": "^0.3.1",
     "vue": "^2.6.11",
     "vue-web-cam": "^1.9.0",
     "vuetify": "^2.3.16",
@@ -27,7 +28,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.1.0",
     "vue-template-compiler": "^2.6.11"
   }
 }
