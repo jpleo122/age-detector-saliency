@@ -1,8 +1,16 @@
 <template>
   <div class="a">
-    <input type="file" id="fileInput" name="file" accept="image/*" />
-    <button id="tryIt">Try it</button>
     <table>
+      <tr>
+        <th>
+          <input type="file" id="fileInput" name="file" accept="image/*" />
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <button id="tryIt">Try it</button>
+        </th>
+      </tr>
       <tr>
         <th>
           <canvas id="canvasInput"></canvas>
@@ -10,7 +18,7 @@
       </tr>
       <tr>
         <th>
-          <span style="font-size: 100px">&#8595;</span>
+          <span style="font-size: 70px">Grayscale</span>
         </th>
       </tr>
       <tr>
@@ -20,7 +28,7 @@
       </tr>
       <tr>
         <th>
-          <span style="font-size: 100px">&#8595;</span>
+          <span style="font-size: 70px">Face Identification</span>
         </th>
       </tr>
       <tr>
@@ -30,7 +38,7 @@
       </tr>
       <tr>
         <th>
-          <span style="font-size: 100px">&#8595;</span>
+          <span style="font-size: 70px">Crop</span>
         </th>
       </tr>
       <tr>
@@ -40,7 +48,7 @@
       </tr>
       <tr>
         <th>
-          <span style="font-size: 100px">&#8595;</span>
+          <span style="font-size: 70px">Resize to 200px x 200px</span>
         </th>
       </tr>
       <tr>
@@ -57,7 +65,7 @@ import * as cv from "opencv.js";
 
 export default {
   name: "ImageLoader2",
-  data: function() {
+  data: function () {
     return {
       transformed: "",
     };
@@ -121,6 +129,8 @@ export default {
       grayCroppedResized.delete();
       faceCascade.delete();
       faces.delete();
+
+      this.$emit("image-transformed");
     },
 
     shrink_face_roi(x, y, w, h) {
@@ -151,8 +161,8 @@ export default {
       request.send();
     },
 
-    loadImageToCanvas(url, cavansId) {
-      let canvas = document.getElementById(cavansId);
+    loadImageToCanvas(url, canvasId) {
+      let canvas = document.getElementById(canvasId);
       let ctx = canvas.getContext("2d");
       let img = new Image();
       img.crossOrigin = "anonymous";
@@ -180,13 +190,14 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     this.addFileInputHandler("fileInput", "canvasInput");
+
+    this.loadImageToCanvas("../../face.jpg", "canvasInput");
 
     let tryIt = document.getElementById("tryIt");
     tryIt.addEventListener("click", () => {
       this.detect();
-      this.$emit("image-transformed");
     });
 
     let faceCascadeFile = "../../models/haarcascade_frontalface_default.xml";
