@@ -60,26 +60,26 @@ export default {
       this.model = await tf.loadLayersModel(modelFile);
       // console.log(this.model.layers);
     },
-    loadImageFromCV() {
-      // canvasGrayCroppedResized
-      const tempCanvas = document.getElementById("canvasGrayCroppedResized");
+    // loadImageFromCV() {
+    //   // canvasGrayCroppedResized
+    //   const tempCanvas = document.getElementById("canvasGrayCroppedResized");
 
-      this.temp_tf_image = tf.browser.fromPixels(tempCanvas, 1);
-      this.getPredictionAndGradients();
-      // console.log(this.temp_tf_image);
+    //   this.temp_tf_image = tf.browser.fromPixels(tempCanvas, 1);
+    //   this.getPredictionAndGradients();
+    //   // console.log(this.temp_tf_image);
 
-      // const canvas = document.getElementById("tempCanvas");
-      // tf.browser.toPixels(this.temp_tf_image, canvas);
-    },
-    // async getTFImage(url) {
-    //   const img = new Image();
-    //   img.src = url;
-    //   img.onload = () => {
-    //     this.temp_tf_image = tf.browser.fromPixels(img, 1);
-    //     // console.log(this.temp_tf_image);
-    //     this.getPredictionAndGradients();
-    //   };
+    //   // const canvas = document.getElementById("tempCanvas");
+    //   // tf.browser.toPixels(this.temp_tf_image, canvas);
     // },
+    async getTFImage(url) {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        this.temp_tf_image = tf.browser.fromPixels(img, 1);
+        // console.log(this.temp_tf_image);
+        this.getPredictionAndGradients();
+      };
+    },
     // prediction and saliency map functions
     getPredictionAndGradients() {
       // get model prediction
@@ -98,17 +98,18 @@ export default {
   },
   async mounted() {
     await this.loadModel();
-    // await this.getTFImage("../../greyscale.jpg");
+    await this.getTFImage("../../greyscale.jpg");
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 div.a {
   vertical-align: middle;
   max-width: 90ch;
   margin: 0 auto;
+  text-align: center;
 }
 h1 {
   text-align: center;

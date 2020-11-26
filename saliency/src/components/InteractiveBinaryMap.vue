@@ -27,9 +27,9 @@ export default {
   },
   methods: {
     sliderInit() {
-      const slider = sliderTop().min(0).max(1).step(0.1)
+      const slider = sliderTop().min(0).max(0.9).step(0.1)
         .default(0.5)
-        .width(300)
+        .width(200)
         .on('onchange', (val) => {
           tf.tidy(() => this.renderTransformation(val));
         });
@@ -39,15 +39,15 @@ export default {
         .attr('height', 100)
         .append('svg')
         .append('g')
-        .attr('transform', 'translate(0,50)');
+        .attr('transform', 'translate(40,50)');
       g.call(slider);
       console.log('got in');
     },
     renderTransformation(threshold) {
-      console.log(this.nonZeros.length);
-      const pivot = this.nonZeros[this.nonZeros.length * (1 - threshold)];
-      console.log(1 - threshold);
-      console.log(pivot);
+      // console.log(this.nonZeros.length);
+      const pivot = this.pivots[Math.round(this.pivots.length * (threshold))];
+      // console.log(1 - threshold);
+      // console.log(pivot);
       if (pivot !== null) {
         const newImage = this.greyImage.mul(this.gradients.greater(pivot));
 
@@ -63,12 +63,13 @@ export default {
       });
       const masked = await tf.booleanMaskAsync(tempValues, tempValues.greater(0));
       this.nonZeros = masked.dataSync();
+
       this.initializePivots();
       this.renderTransformation(0.5);
     },
     initializePivots() {
-      this.pivots.push(0);
-      for (let i = 1; i <= 10; i += 1) {
+      this.pivots = [];
+      for (let i = 9; i >= 0; i -= 1) {
         this.pivots.push(this.nonZeros[this.nonZeros.length * (i / 10)]);
       }
       console.log(this.pivots);

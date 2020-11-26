@@ -199,12 +199,4 @@ export default {
 </script>
 
 <style>
-div.a {
-  vertical-align: middle;
-  max-width: 90ch;
-  margin: 0 auto;
-}
-table {
-  vertical-align: middle;
-}
 </style>
