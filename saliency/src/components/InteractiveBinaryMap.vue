@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div class='b' id='myDiv'></div>
-    <canvas id="interactive-binary-map" width="200" height="200"></canvas>
+    <div class='b' id='myDiv'>
+      <canvas id="interactive-binary-map"></canvas>
+    </div>
   </div>
 </template>
 
@@ -36,10 +37,10 @@ export default {
       const g = d3
         .select('div#myDiv')
         .attr('width', 500)
-        .attr('height', 100)
+        .attr('height', 50)
         .append('svg')
         .append('g')
-        .attr('transform', 'translate(40,50)');
+        .attr('transform', 'translate(50,50)');
       g.call(slider);
       console.log('got in');
     },
@@ -69,9 +70,10 @@ export default {
       });
     },
     initializePivots() {
+      console.log(this.nonZeros);
       this.pivots = [];
       for (let i = 9; i >= 0; i -= 1) {
-        this.pivots.push(this.nonZeros[this.nonZeros.length * (i / 10)]);
+        this.pivots.push(this.nonZeros[Math.round(this.nonZeros.length * (i / 10))]);
       }
       console.log(this.pivots);
     },
@@ -82,5 +84,9 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
+div.b {
+  padding: 0;
+  margin: 0;
+}
 </style>

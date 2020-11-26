@@ -100,7 +100,7 @@ export default {
     await this.loadModel();
 
     // only run while testing
-    // await this.getTFImage("../../greyscale.jpg");
+    await this.getTFImage("../../greyscale.jpg");
   },
 };
 </script>
