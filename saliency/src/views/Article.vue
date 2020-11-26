@@ -15,6 +15,8 @@
 
     <!-- <h2>Interactive Binary Saliency Map</h2> -->
     <!-- <div class="a"> -->
+    <span style="font-size: 70px">Predicted Age Range: {{ this.age_ranges[this.predicted_idx] }}</span>
+    <br>
     <span style="font-size: 70px">Heatmap</span>
     <intensity-map
       v-if="this.temp_tf_image_gradients"
