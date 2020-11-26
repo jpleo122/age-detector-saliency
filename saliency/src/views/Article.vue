@@ -60,17 +60,17 @@ export default {
       this.model = await tf.loadLayersModel(modelFile);
       // console.log(this.model.layers);
     },
-    // loadImageFromCV() {
-    //   // canvasGrayCroppedResized
-    //   const tempCanvas = document.getElementById("canvasGrayCroppedResized");
+    loadImageFromCV() {
+      // canvasGrayCroppedResized
+      const tempCanvas = document.getElementById("canvasGrayCroppedResized");
 
-    //   this.temp_tf_image = tf.browser.fromPixels(tempCanvas, 1);
-    //   this.getPredictionAndGradients();
-    //   // console.log(this.temp_tf_image);
+      this.temp_tf_image = tf.browser.fromPixels(tempCanvas, 1);
+      this.getPredictionAndGradients();
+      // console.log(this.temp_tf_image);
 
-    //   // const canvas = document.getElementById("tempCanvas");
-    //   // tf.browser.toPixels(this.temp_tf_image, canvas);
-    // },
+      // const canvas = document.getElementById("tempCanvas");
+      // tf.browser.toPixels(this.temp_tf_image, canvas);
+    },
     async getTFImage(url) {
       const img = new Image();
       img.src = url;
@@ -98,7 +98,9 @@ export default {
   },
   async mounted() {
     await this.loadModel();
-    await this.getTFImage("../../greyscale.jpg");
+
+    // only run while testing
+    // await this.getTFImage("../../greyscale.jpg");
   },
 };
 </script>

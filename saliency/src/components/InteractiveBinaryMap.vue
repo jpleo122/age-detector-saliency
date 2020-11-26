@@ -61,11 +61,12 @@ export default {
         const { values, indices } = tf.topk(temp, temp.shape[0], true);
         return values;
       });
-      const masked = await tf.booleanMaskAsync(tempValues, tempValues.greater(0));
-      this.nonZeros = masked.dataSync();
+      await tf.booleanMaskAsync(tempValues, tempValues.greater(0)).then((value) => {
+        this.nonZeros = value.dataSync();
 
-      this.initializePivots();
-      this.renderTransformation(0.5);
+        this.initializePivots();
+        this.renderTransformation(0.5);
+      });
     },
     initializePivots() {
       this.pivots = [];
@@ -76,7 +77,7 @@ export default {
     },
   },
   async mounted() {
-    await this.getNonzeros().then(() => {});
+    await this.getNonzeros().then();
     this.sliderInit();
   },
 };
