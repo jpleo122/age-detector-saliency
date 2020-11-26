@@ -24,8 +24,6 @@ export default {
       pivots: [],
     };
   },
-  computed: {
-  },
   methods: {
     sliderInit() {
       const slider = sliderTop().min(0).max(0.9).step(0.1)
@@ -79,7 +77,7 @@ export default {
     },
   },
   async mounted() {
-    await this.getNonzeros().then();
+    await this.getNonzeros();
     this.sliderInit();
   },
 };
@@ -88,5 +86,6 @@ export default {
 div.b {
   padding: 0;
   margin: 0;
+  text-align: center;
 }
 </style>

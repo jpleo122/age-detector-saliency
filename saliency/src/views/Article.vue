@@ -1,28 +1,41 @@
 <template>
   <div class="a">
-    <h1>Visualizing Age Detectors with Saliency Maps</h1>
-    <ImageLoader2 
-      @image-transformed='loadImageFromCV()'
-    />
+    <!-- <h1>Visualizing Age Detectors with Saliency Maps</h1> -->
+    <span style="font-size: 70px"
+      ><b>Visualizing Age Detectors with Saliency Maps</b></span
+    >
+    <ImageLoader2 @image-transformed="loadImageFromCV()" />
     <!-- <div>prediction:{{this.num}}</div> -->
 
     <!-- <img :src="this.temp_img_url" id="temp_image" /> -->
 
-    <canvas id="tempCanvas"></canvas>
+    <!-- <h2>Convert</h2> -->
 
-    <h2>What is a saliency map?</h2>
+    <!-- <p>This question is best answered with another, what is saliency? Saliency A saliency map is a model visualization device that tries to capture what </p> -->
 
-    <h2>How to use a saliency map</h2>
-
-    <h2>What is a saliency map?</h2>
-
-    <interactive-binary-map
-      v-if='this.temp_tf_image_gradients'
-      :gradients='this.temp_tf_image_gradients'
-      :greyImage='this.temp_tf_image'
+    <!-- <h2>Interactive Binary Saliency Map</h2> -->
+    <!-- <div class="a"> -->
+    <span style="font-size: 70px">Heatmap</span>
+    <intensity-map
+      v-if="this.temp_tf_image_gradients"
+      :gradients="this.temp_tf_image_gradients"
     />
+    <!-- </div> -->
 
-    <h2>What is a saliency map?</h2>
+    <!-- <div class="a">  -->
+    <span style="font-size: 70px">Interactive Binary Map</span>
+    <interactive-binary-map
+      v-if="this.temp_tf_image_gradients"
+      :gradients="this.temp_tf_image_gradients"
+      :greyImage="this.temp_tf_image"
+    />
+    <!-- </div> -->
+    <!-- <span style="font-size: 70px">Interactive Binary Map</span>
+    <interactive-binary-map
+      v-if="this.temp_tf_image_gradients"
+      :gradients="this.temp_tf_image_gradients"
+      :greyImage="this.temp_tf_image"
+    /> -->
   </div>
 </template>
 
@@ -31,7 +44,8 @@ import * as tf from "@tensorflow/tfjs";
 import * as cv from "opencv.js";
 
 import ImageLoader2 from "../components/ImageLoader2.vue";
-import InteractiveBinaryMap from '../components/InteractiveBinaryMap.vue';
+import InteractiveBinaryMap from "../components/InteractiveBinaryMap.vue";
+import IntensityMap from "../components/IntensityMap.vue";
 
 export default {
   name: "Article",
@@ -44,14 +58,24 @@ export default {
       model: null,
       temp_tf_image: null,
       predicted_idx: null,
-      age_ranges: ['0-9', '10-19', '20-29', '30-39', '40-49', '50-59', '60-116'],
+      age_ranges: [
+        "0-9",
+        "10-19",
+        "20-29",
+        "30-39",
+        "40-49",
+        "50-59",
+        "60-116",
+      ],
       // gradient information
       temp_tf_image_gradients: null,
+      rerenders: {},
     };
   },
   components: {
     InteractiveBinaryMap,
-    ImageLoader2
+    ImageLoader2,
+    IntensityMap,
   },
   methods: {
     // load model, face detection, and image upon mounting
@@ -83,24 +107,26 @@ export default {
     // prediction and saliency map functions
     getPredictionAndGradients() {
       // get model prediction
-      const outputs = tf.tidy(() => this.model.predict(this.temp_tf_image.reshape([1, 200, 200, 1])));
+      const outputs = tf.tidy(() =>
+        this.model.predict(this.temp_tf_image.reshape([1, 200, 200, 1]))
+      );
       this.predicted_idx = tf.argMax(outputs, 1).dataSync()[0];
-      // console.log(this.predicted_idx);
 
       // obtain gradients
-      const predictFunc = (x) => this.model.predict(x.reshape([1, 200, 200, 1]));
+      const predictFunc = (x) =>
+        this.model.predict(x.reshape([1, 200, 200, 1]));
       const gradientFunc = tf.grad(predictFunc);
 
-      // const canvas = document.getElementById("myCanvas");
-      // tf.browser.toPixels(newImage, canvas);
-      this.temp_tf_image_gradients = tf.tidy(() => gradientFunc(this.temp_tf_image, outputs).abs());
+      this.temp_tf_image_gradients = tf.tidy(() =>
+        gradientFunc(this.temp_tf_image, outputs).abs()
+      );
     },
   },
   async mounted() {
     await this.loadModel();
 
     // only run while testing
-    await this.getTFImage("../../greyscale.jpg");
+    // await this.getTFImage("../../greyscale.jpg");
   },
 };
 </script>
@@ -109,7 +135,7 @@ export default {
 <style>
 div.a {
   vertical-align: middle;
-  max-width: 90ch;
+  max-width: 200ch;
   margin: 0 auto;
   text-align: center;
 }
@@ -117,7 +143,7 @@ h1 {
   text-align: center;
 }
 p {
-  font-size: 17px;
+  font-size: 20px;
 }
 h3 {
   margin: 40px 0 0;

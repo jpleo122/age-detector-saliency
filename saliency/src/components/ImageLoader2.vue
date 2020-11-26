@@ -1,62 +1,48 @@
 <template>
   <div class="a">
-    <table>
-      <tr>
-        <th>
-          <input type="file" id="fileInput" name="file" accept="image/*" />
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <button id="tryIt">Try it</button>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <canvas id="canvasInput"></canvas>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <span style="font-size: 70px">Grayscale</span>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <canvas id="canvasGray"></canvas>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <span style="font-size: 70px">Face Identification</span>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <canvas id="canvasGrayBounded"></canvas>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <span style="font-size: 70px">Crop</span>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <canvas id="canvasGrayCropped"></canvas>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <span style="font-size: 70px">Resize to 200px x 200px</span>
-        </th>
-      </tr>
-      <tr>
-        <th>
-          <canvas id="canvasGrayCroppedResized"></canvas>
-        </th>
-      </tr>
-    </table>
+    <div>
+      <input type="file" id="fileInput" name="file" accept="image/*" />
+    </div>
+
+    <div>
+      <button id="tryIt">Try it</button>
+    </div>
+
+    <div>
+      <canvas id="canvasInput"></canvas>
+    </div>
+
+    <div>
+      <span style="font-size: 70px">Grayscale</span>
+    </div>
+
+    <div>
+      <canvas id="canvasGray"></canvas>
+    </div>
+
+    <div>
+      <span style="font-size: 70px">Face Identification</span>
+    </div>
+
+    <div>
+      <canvas id="canvasGrayBounded"></canvas>
+    </div>
+
+    <div>
+      <span style="font-size: 70px">Crop</span>
+    </div>
+
+    <div>
+      <canvas id="canvasGrayCropped"></canvas>
+    </div>
+
+    <div>
+      <span style="font-size: 70px">Resize to 200px x 200px</span>
+    </div>
+
+    <div>
+      <canvas id="canvasGrayCroppedResized"></canvas>
+    </div>
   </div>
 </template>
 
@@ -210,4 +196,8 @@ export default {
 </script>
 
 <style>
+/* table {
+  margin-left: auto;
+  margin-right: auto;
+} */
 </style>
