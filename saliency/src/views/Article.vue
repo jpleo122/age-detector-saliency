@@ -1,18 +1,26 @@
 <template>
   <div class="a">
-    <ImageLoader2 />
-    <SaliencyMap />
+    <h1>Visualizing Age Detectors with Saliency Maps</h1>
+    <ImageLoader2 
+      @image-transformed='loadImageFromCV()'
+    />
     <!-- <div>prediction:{{this.num}}</div> -->
 
-    <img :src="this.temp_img_url" id="temp_image" />
+    <!-- <img :src="this.temp_img_url" id="temp_image" /> -->
 
-    <h1>Visualizing Age Detectors with Saliency Maps</h1>
+    <canvas id="tempCanvas"></canvas>
 
     <h2>What is a saliency map?</h2>
 
     <h2>How to use a saliency map</h2>
 
     <h2>What is a saliency map?</h2>
+
+    <interactive-binary-map
+      v-if='this.temp_tf_image_gradients'
+      :gradients='this.temp_tf_image_gradients'
+      :greyImage='this.temp_tf_image'
+    />
 
     <h2>What is a saliency map?</h2>
   </div>
@@ -22,8 +30,8 @@
 import * as tf from "@tensorflow/tfjs";
 import * as cv from "opencv.js";
 
-import SaliencyMap from "../components/SaliencyMap.vue";
 import ImageLoader2 from "../components/ImageLoader2.vue";
+import InteractiveBinaryMap from '../components/InteractiveBinaryMap.vue';
 
 export default {
   name: "Article",
@@ -36,84 +44,61 @@ export default {
       model: null,
       temp_tf_image: null,
       predicted_idx: null,
-      age_ranges: [
-        "0-9",
-        "10-19",
-        "20-29",
-        "30-39",
-        "40-49",
-        "50-59",
-        "60-116",
-      ],
+      age_ranges: ['0-9', '10-19', '20-29', '30-39', '40-49', '50-59', '60-116'],
+      // gradient information
+      temp_tf_image_gradients: null,
     };
   },
   components: {
-    SaliencyMap,
-    ImageLoader2,
+    InteractiveBinaryMap,
+    ImageLoader2
   },
   methods: {
     // load model, face detection, and image upon mounting
     async loadModel() {
       const modelFile = "../../models/model.json";
       this.model = await tf.loadLayersModel(modelFile);
+      // console.log(this.model.layers);
     },
-    loadFaceDetection() {
-      const faceDetectFile = "../../haarcascade_frontalface_default.xml";
-      this.face_detector = new cv.CascadeClassifier();
-      this.face_detector.load(faceDetectFile);
-    },
-    predictModel(event) {
-      this.pic = event;
-      // console.log(cv.imread("imgId"));
-    },
+    loadImageFromCV() {
+      // canvasGrayCroppedResized
+      const tempCanvas = document.getElementById("canvasGrayCroppedResized");
 
-    getFace(face) {},
+      this.temp_tf_image = tf.browser.fromPixels(tempCanvas, 1);
+      this.getPredictionAndGradients();
+      // console.log(this.temp_tf_image);
 
-    async getTFImage(url) {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => {
-        this.temp_tf_image = tf.browser.fromPixels(img, 1);
-        console.log(this.temp_tf_image);
-        this.getPredictionAndGradients();
-      };
+      // const canvas = document.getElementById("tempCanvas");
+      // tf.browser.toPixels(this.temp_tf_image, canvas);
     },
+    // async getTFImage(url) {
+    //   const img = new Image();
+    //   img.src = url;
+    //   img.onload = () => {
+    //     this.temp_tf_image = tf.browser.fromPixels(img, 1);
+    //     // console.log(this.temp_tf_image);
+    //     this.getPredictionAndGradients();
+    //   };
+    // },
     // prediction and saliency map functions
     getPredictionAndGradients() {
       // get model prediction
-      tf.max(this.temp_tf_image).print();
-      const outputs = this.model.predict(
-        this.temp_tf_image.reshape([1, 200, 200, 1])
-      );
-      outputs.print();
+      const outputs = tf.tidy(() => this.model.predict(this.temp_tf_image.reshape([1, 200, 200, 1])));
       this.predicted_idx = tf.argMax(outputs, 1).dataSync()[0];
-      // console.log(this.predicted_idx[0]);
-      const softmaxed = tf.softmax(outputs).dataSync();
-      console.log(softmaxed);
-      tf.tensor(softmaxed[0]).print();
+      // console.log(this.predicted_idx);
 
       // obtain gradients
-      const predictFunc = (x) => {
-        return tf.softmax(this.model.predict(x.reshape([1, 200, 200, 1])));
-        // const tempPredicted = tf.argMax(tempOutputs, 1).dataSync()[0];
-        // return tf.softmax(;
-      };
-      const gradFunc = tf.grad(predictFunc);
-      // const grad = gradFunc(this.temp_tf_image, tf.tensor(tf.softmax(outputs).dataSync()[0]));
-      const grads = gradFunc(this.temp_tf_image, tf.softmax(outputs)).abs();
-      // console.log(255 / tf.max(grads).dataSync()[0]);
-      const newImage = grads.mul(1 / tf.max(grads).dataSync()[0]);
-      console.log(newImage);
-      tf.max(newImage).print();
+      const predictFunc = (x) => this.model.predict(x.reshape([1, 200, 200, 1]));
+      const gradientFunc = tf.grad(predictFunc);
 
-      const canvas = document.getElementById("myCanvas");
-      tf.browser.toPixels(newImage, canvas);
+      // const canvas = document.getElementById("myCanvas");
+      // tf.browser.toPixels(newImage, canvas);
+      this.temp_tf_image_gradients = tf.tidy(() => gradientFunc(this.temp_tf_image, outputs).abs());
     },
   },
   async mounted() {
-    // this.loadFaceDetection();
     await this.loadModel();
-    await this.getTFImage("../../greyscale.jpg");
+    // await this.getTFImage("../../greyscale.jpg");
   },
 };
 </script>

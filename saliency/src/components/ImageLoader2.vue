@@ -1,6 +1,5 @@
 <template>
-  <body>
-    <h2>Saliency</h2>
+  <div class="a">
     <input type="file" id="fileInput" name="file" accept="image/*" />
     <button id="tryIt">Try it</button>
     <table>
@@ -50,7 +49,7 @@
         </th>
       </tr>
     </table>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -135,7 +134,7 @@ export default {
       };
     },
 
-    createFileFromUrl(path, url, callback) {
+    createFileFromUrl(path, url) {
       let request = new XMLHttpRequest();
       request.open("GET", url, true);
       request.responseType = "arraybuffer";
@@ -144,7 +143,6 @@ export default {
           if (request.status === 200) {
             let data = new Uint8Array(request.response);
             cv.FS_createDataFile("/", path, data, true, false, false);
-            callback();
           } else {
             console.log("Failed to load " + url + " status: " + request.status);
           }
@@ -188,7 +186,7 @@ export default {
     let tryIt = document.getElementById("tryIt");
     tryIt.addEventListener("click", () => {
       this.detect();
-      this.$emit("image-transformed", this.transformed);
+      this.$emit("image-transformed");
     });
 
     let faceCascadeFile = "../../models/haarcascade_frontalface_default.xml";
@@ -201,4 +199,12 @@ export default {
 </script>
 
 <style>
+div.a {
+  vertical-align: middle;
+  max-width: 90ch;
+  margin: 0 auto;
+}
+table {
+  vertical-align: middle;
+}
 </style>
